@@ -92,6 +92,7 @@ body {
   overflow: hidden;
   margin-bottom: 20px;
   background: #FE00BE;
+  position: relative;
 }
 
 .cover img {
@@ -104,6 +105,11 @@ body {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 20px;
+}
+.seek-bar {
+  width: 400px;
+  margin: 20px 0;
+  accent-color: #d40000;
 }
 
 .controls {
