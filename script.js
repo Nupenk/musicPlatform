@@ -1,4 +1,4 @@
-const CLIENT_ID = '2b6cb1ee'; // замініть на свій ключ
+const CLIENT_ID = '2b6cb1ee'; // замініть на свій клю
 const trackNameEl = document.querySelector('.track-name');
 const coverEl = document.querySelector('.cover img');
 const playBtn = document.querySelector('.play');
@@ -8,23 +8,33 @@ let trackUrl = '';
 let trackImage = '';
 let trackName = '';
 
+let trackIndex = 0;
+let genre = 'electronic';
 
 function fetchTrack() {
-  fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=1`)
+  fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=200&tags=${genre}`)
     .then(res => res.json())
     .then(data => {
       console.log('Jamendo response:', data); // Додаємо логування
-      const track = data.results[0];
+      const track = data.results[trackIndex];
       if (!track) {
         alert('Трек не знайдено!');
         return;
       }
       trackUrl = track.audio;
-      trackImage = track.album_image;
+      trackImage = track.image;
       trackName = track.name;
 
       coverEl.src = trackImage;
       trackNameEl.textContent = trackName;
+
+      if (audio) {
+        audio.pause();
+      }
+      audio = new Audio(trackUrl);
+      attachAudioEvents();
+      playBtn.textContent = '▶';
+
     })
     .catch(err => {
       console.error('Помилка запиту:', err);
@@ -50,6 +60,8 @@ function attachAudioEvents() {
     playBtn.textContent = '▶';
     audio = null;
     seekBar.value = 0;
+    trackIndex++;   
+    fetchTrack(); 
   };
 }
 
@@ -75,5 +87,6 @@ playBtn.addEventListener('click', () => {
     attachAudioEvents();
   }
 });
+
 
 fetchTrack();
