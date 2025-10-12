@@ -18,8 +18,10 @@ function fetchTrack() {
       console.log('Jamendo response:', data); // Додаємо логування
       const track = data.results[trackIndex];
       if (!track) {
-        alert('Трек не знайдено!');
-        return;
+        console.log("Не знайдено трек, спроба знову");
+        setTimeout( () => {
+          fetchTrack();
+        },500);
       }
       trackUrl = track.audio;
       trackImage = track.image;
