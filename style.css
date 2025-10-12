@@ -1,25 +1,38 @@
-/* Общие стили */
 body {
   margin: 0;
   font-family: 'Signika Negative', sans-serif;
   background: linear-gradient(154.49deg, #AE00FF 11.22%, #AF00FF 35.53%, #EA07FF 56.72%, #5500FF 79.98%, #5E00FE 92.24%);
   color: #fff;
+  overflow: hidden;
 }
 
 .app {
   display: flex;
   justify-content: space-between;
   height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
+
+/* Анимации */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fade-in { animation: fadeInUp 0.8s ease-out forwards; }
+.fade-in-delay { opacity: 0; animation: fadeInUp 1s ease-out 0.4s forwards; }
 
 /* Левая колонка */
 .sidebar-left {
   width: 320px;
-  background: #000;
+  background: rgba(0, 0, 0, 1);
   border-radius: 0 0 0 30px;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  z-index: 2;
 }
 
 .sidebar-left h2 {
@@ -40,7 +53,9 @@ body {
   font-weight: bold;
 }
 
+/* Плейлист */
 .playlist {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -48,13 +63,14 @@ body {
   padding: 10px;
   border-radius: 10px;
   transition: 0.2s;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: visible;
 }
 
 .playlist:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
   transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .playlist img {
@@ -64,16 +80,59 @@ body {
   object-fit: cover;
 }
 
-.playlist .info span {
-  font-weight: 600;
+.menu-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: #fff;
   font-size: 20px;
-  display: block;
+  cursor: pointer;
+  padding: 6px;
+  transition: 0.2s;
 }
 
-.playlist .info small {
-  font-weight: 400;
-  font-size: 14px;
-  opacity: 0.7;
+.menu-btn:hover { transform: scale(1.2); }
+
+.playlist-menu {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 20px);
+  transform: translateY(-50%) scale(0.9);
+  background: rgba(20, 20, 20, 0.98);
+  border-radius: 10px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.playlist-menu.active {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto;
+}
+
+.playlist-menu button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  text-align: left;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.playlist-menu button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Центральная часть */
@@ -88,11 +147,11 @@ body {
 .cover {
   width: 400px;
   height: 400px;
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 20px;
   background: #FE00BE;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .cover img {
@@ -101,11 +160,19 @@ body {
   object-fit: cover;
 }
 
-.track-name {
-  font-size: 32px;
+.cover-title {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
   font-weight: 700;
-  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 0 0 16px 16px;
 }
+
 .seek-bar {
   width: 400px;
   margin: 20px 0;
@@ -137,19 +204,14 @@ body {
 /* Правая колонка */
 .sidebar-right {
   width: 320px;
-  background: #000;   /* добавляем черный фон */
-  border-radius: 0 0 30px 0; /* симметрия как слева */
+  background: rgba(0,0,0,1);
+  border-radius: 0 0 30px 0;
   padding: 20px;
   display: flex;
   flex-direction: column;
   color: #fff;
-}
-
-
-.sidebar-right h2 {
-  font-weight: 700;
-  font-size: 32px;
-  margin-bottom: 15px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  z-index: 2;
 }
 
 .track {
@@ -164,7 +226,6 @@ body {
 
 .track:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
   transform: scale(1.02);
 }
 
@@ -173,22 +234,69 @@ body {
   height: 64px;
   border-radius: 10px;
   object-fit: cover;
-  background: #d9d9d9; /* заглушка */
+  background: #d9d9d9;
 }
 
-.track .info span {
-  font-weight: 600;
-  font-size: 20px;
-  display: block;
+/* 🧰 Модалка */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
 }
 
-.track .info small {
-  font-weight: 400;
-  font-size: 14px;
-  opacity: 0.7;
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
-.track .duration {
-  margin-left: auto;
-  font-size: 14px;
-  opacity: 0.7;
+
+.modal {
+  background: #111;
+  padding: 25px 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: modalScale 0.3s ease;
+}
+
+@keyframes modalScale {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.confirm-delete {
+  background: #e60000;
+  color: #fff;
+}
+
+.cancel-delete {
+  background: #555;
+  color: #fff;
+}
+
+.modal-actions button:hover {
+  transform: scale(1.05);
 }
