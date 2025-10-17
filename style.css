@@ -142,6 +142,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .cover {
@@ -237,6 +238,75 @@ body {
   background: #d9d9d9;
 }
 
+/* 🎧 Ползунок громкости */
+/* 🔊 Горизонтальный слайдер громкости */
+.volume-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.volume-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.3s;
+}
+
+.volume-icon:hover {
+  transform: scale(1.15);
+  color: #ff79ff;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 8px;
+  background: linear-gradient(to right, #ff0077, #a000ff);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #a000ff;
+  cursor: grab;
+  transition: 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #a000ff;
+  cursor: grab;
+  transition: 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-container.show .volume-slider {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
 /* 🧰 Модалка */
 .modal-overlay {
   position: fixed;
@@ -298,5 +368,110 @@ body {
 }
 
 .modal-actions button:hover {
+  transform: scale(1.05);
+}
+.confirm-delete:hover {
+  background: #ff1a1a;
+}
+/* 🌟 Модалка создания плейлиста */
+.create-playlist-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2000;
+}
+
+.create-playlist-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.create-playlist-modal {
+  background: #111;
+  width: 60%;
+  max-width: 800px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  animation: createModalShow 0.35s ease;
+}
+
+@keyframes createModalShow {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.create-playlist-modal h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.playlist-name-input,
+.playlist-desc-input {
+  width: 100%;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  outline: none;
+  resize: none;
+  transition: background 0.3s;
+}
+
+.playlist-name-input:focus,
+.playlist-desc-input:focus {
+  background: #333;
+}
+
+.playlist-desc-input {
+  min-height: 80px;
+}
+
+.create-playlist-modal .modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.confirm-create {
+  background: #a000ff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.confirm-create:hover {
+  background: #c000ff;
+  transform: scale(1.05);
+}
+
+.cancel-create {
+  background: #555;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-create:hover {
+  background: #777;
   transform: scale(1.05);
 }
