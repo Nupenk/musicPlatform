@@ -13,7 +13,6 @@
       <h2>Плейлісти</h2>
       <button class="create-playlist">+ Створити новий плейліст</button>
 
-      <!-- Пример плейлистов -->
       <div class="playlist">
         <img src="placeholder.jpg" alt="cover">
         <div class="info">
@@ -22,10 +21,10 @@
         </div>
         <button class="menu-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
         <div class="playlist-menu">
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
-          <button><i class="fa-solid fa-pen"></i> Редагувати</button>
-          <button><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
-          <button><i class="fa-solid fa-shuffle"></i> Перемішати</button>
+          <button data-action="delete" class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
+          <button data-action="edit"><i class="fa-solid fa-pen"></i> Редагувати</button>
+          <button data-action="move"><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
+          <button data-action="shuffle"><i class="fa-solid fa-shuffle"></i> Перемішати</button>
         </div>
       </div>
 
@@ -37,10 +36,10 @@
         </div>
         <button class="menu-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
         <div class="playlist-menu">
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
-          <button><i class="fa-solid fa-pen"></i> Редагувати</button>
-          <button><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
-          <button><i class="fa-solid fa-shuffle"></i> Перемішати</button>
+          <button data-action="delete" class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
+          <button data-action="edit"><i class="fa-solid fa-pen"></i> Редагувати</button>
+          <button data-action="move"><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
+          <button data-action="shuffle"><i class="fa-solid fa-shuffle"></i> Перемішати</button>
         </div>
       </div>
 
@@ -52,10 +51,10 @@
         </div>
         <button class="menu-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
         <div class="playlist-menu">
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
-          <button><i class="fa-solid fa-pen"></i> Редагувати</button>
-          <button><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
-          <button><i class="fa-solid fa-shuffle"></i> Перемішати</button>
+          <button data-action="delete" class="delete-btn"><i class="fa-solid fa-trash"></i> Видалити</button>
+          <button data-action="edit"><i class="fa-solid fa-pen"></i> Редагувати</button>
+          <button data-action="move"><i class="fa-solid fa-arrows-up-down-left-right"></i> Перемістити</button>
+          <button data-action="shuffle"><i class="fa-solid fa-shuffle"></i> Перемішати</button>
         </div>
       </div>
     </div>
@@ -66,13 +65,21 @@
         <img src="placeholder.jpg" alt="Track Cover"> 
         <div class="cover-title">Name of Music</div>
       </div>
+
       <input type="range" class="seek-bar" value="0" min="0" max="100" step="1">
+
       <div class="controls">
         <button class="like">👍</button>
         <button class="prev">⏮</button>
         <button class="play">▶</button>
         <button class="next">⏭</button>
         <button class="dislike">👎</button>
+      </div>
+
+      <!-- Горизонтальный ползунок громкости под кнопками -->
+      <div class="volume-container">
+        <i class="fa-solid fa-volume-high volume-icon"></i>
+        <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1">
       </div>
     </div>
 
@@ -110,13 +117,26 @@
     </div>
   </div>
 
-  <!-- 🧰 Модальное окно удаления -->
-  <div class="modal-overlay">
+  <!-- Модалка подтверждения удаления (одна общая) -->
+  <div class="modal-overlay" id="deleteModal">
     <div class="modal">
       <p>Ви впевнені, що хочете видалити цей плейліст?</p>
       <div class="modal-actions">
         <button class="confirm-delete">Так</button>
         <button class="cancel-delete">Скасувати</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка создания плейлиста (60% экрана) -->
+  <div class="create-playlist-overlay" id="createModal">
+    <div class="create-playlist-modal">
+      <h2>Створити новий плейліст</h2>
+      <input type="text" placeholder="Назва плейлісту" class="playlist-name-input">
+      <textarea placeholder="Опис плейлісту (необов'язково)" class="playlist-desc-input"></textarea>
+      <div class="modal-actions">
+        <button class="confirm-create">Створити</button>
+        <button class="cancel-create">Скасувати</button>
       </div>
     </div>
   </div>
