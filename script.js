@@ -1,45 +1,80 @@
+// Не змінюйте й не видаляйте клієнт айді, воно відповідає за Api Jamendo
 const CLIENT_ID = '2b6cb1ee';
 const trackNameEl = document.querySelector('.cover-title');
 const coverEl = document.querySelector('.cover img');
 const playBtn = document.querySelector('.play');
 const seekBar = document.querySelector('.seek-bar');
+// Змінні хотбару музики
 const volumeIcon = document.querySelector('.volume-icon');
 const volumeSlider = document.querySelector('.volume-slider');
 const volumeContainer = document.querySelector('.volume-container');
-
+// Змінні музики
 let audio = null;
 let trackUrl = '';
 let hideTimeout = null;
 
+let trackIndex = 0;
+let genre = 'electronic';
+// Функція для знаходження та встановлення треку
 function fetchTrack() {
-  fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=1`)
+  // Взаємодіючи з силкою можна виставляти різні жанри музики, ліміт пісень 200
+  fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=200&tags=${genre}`)
     .then(res => res.json())
     .then(data => {
-      const track = data.results[0];
-      if (!track) return;
+      console.log('Jamendo response:', data); // Додаємо логування
+      const track = data.results[trackIndex];
+      // Якщо не знайшло пісню, хай знов дивититься, але зі затримкою щоб не їло систему
+      if (!track) {
+        console.log("Не знайдено трек, спроба знову");
+        setTimeout( () => {
+          fetchTrack();
+        },500);
+      }
+      // Встановлення властивостей пісні
       trackUrl = track.audio;
-      coverEl.src = track.album_image;
-      trackNameEl.textContent = track.name;
-    });
-}
+      trackImage = track.image; // Є ще властивість album_image
+      trackName = track.name;
 
+      coverEl.src = trackImage;
+      trackNameEl.textContent = trackName;
+
+      // Створення класу музики
+      audio = new Audio(trackUrl);
+      attachAudioEvents();
+      playBtn.textContent = '⏸';
+
+      // Якщо пісня грає не першою, то відразу хай починає грати
+      if (audio) {
+        audio.play();
+      }
+
+    })
+    .catch(err => console.error('Помилка:', err));
+}
+// Оновлення полоски часу музики
 function updateSeekBar() {
   if (audio && audio.duration) {
     seekBar.max = Math.floor(audio.duration);
     seekBar.value = Math.floor(audio.currentTime);
   }
 }
-
+// Коли пісня закінчується, встановлюємо наступну пісню та ресетаємо полоску часу
 function attachAudioEvents() {
   if (!audio) return;
   audio.ontimeupdate = updateSeekBar;
-  audio.onended = () => playBtn.textContent = '▶';
+  audio.onended = () => {
+    playBtn.textContent = '▶';
+    audio = null;
+    seekBar.value = 0;
+    trackIndex++;   
+    fetchTrack(); 
+  };
 }
-
+// Місце повзунка відповідно до часу пісні
 seekBar.addEventListener('input', () => {
   if (audio) audio.currentTime = seekBar.value;
 });
-
+// Функціонал кнопки зупинити або відтворити
 playBtn.addEventListener('click', () => {
   if (audio && !audio.paused) {
     audio.pause();
@@ -57,6 +92,34 @@ playBtn.addEventListener('click', () => {
 });
 
 fetchTrack();
+
+// Перехід назад між треками
+document.querySelector('.prev').addEventListener('click', () => {
+  if (trackIndex > 0) {
+    if (audio && !audio.paused) audio.pause();
+    trackIndex--;
+    playBtn.textContent = '▶';
+    audio = null;
+    seekBar.value = 0;
+    fetchTrack();
+  } else {
+    alert("Вже перший трек, нікуди не можна назад");
+  }
+});
+  
+// Перехід вперед між треками
+document.querySelector('.next').addEventListener('click', () => {
+  if (trackIndex < 199) {
+    if (audio && !audio.paused) audio.pause();
+    trackIndex++;
+    playBtn.textContent = '▶';
+    audio = null;
+    seekBar.value = 0;
+    fetchTrack();
+  } else {
+    alert("Вже останній трек, нікуди не можна вперед");
+  }
+});
 
 /* === Меню плейлистов === */
 document.querySelectorAll('.menu-btn').forEach(btn => {
