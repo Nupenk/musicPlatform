@@ -1,3 +1,6 @@
+/* =========================================================
+ 🎨 ОСНОВНОЕ ОФОРМЛЕНИЕ
+========================================================= */
 body {
   margin: 0;
   font-family: 'Signika Negative', sans-serif;
@@ -10,23 +13,23 @@ body {
   display: flex;
   justify-content: space-between;
   height: 100vh;
-  overflow: hidden;
   position: relative;
 }
 
-/* Анимации */
+/* ===== анимация появления ===== */
 @keyframes fadeInUp {
-  0% { opacity: 0; transform: translateY(40px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .fade-in { animation: fadeInUp 0.8s ease-out forwards; }
 .fade-in-delay { opacity: 0; animation: fadeInUp 1s ease-out 0.4s forwards; }
 
-/* Левая колонка */
+/* =========================================================
+ 🧭 ЛЕВАЯ КОЛОНКА (СПИСОК ПЛЕЙЛИСТОВ)
+========================================================= */
 .sidebar-left {
   width: 320px;
-  background: rgba(0, 0, 0, 1);
+  background: #000;
   border-radius: 0 0 0 30px;
   padding: 20px;
   display: flex;
@@ -34,7 +37,6 @@ body {
   box-shadow: 0 0 30px rgba(0,0,0,0.5);
   z-index: 2;
 }
-
 .sidebar-left h2 {
   font-weight: 700;
   font-size: 32px;
@@ -53,7 +55,6 @@ body {
   font-weight: bold;
 }
 
-/* Плейлист */
 .playlist {
   position: relative;
   display: flex;
@@ -63,22 +64,21 @@ body {
   padding: 10px;
   border-radius: 10px;
   transition: 0.2s;
-  background: rgba(255, 255, 255, 0.05);
-  overflow: visible;
+  background: rgba(255,255,255,0.05);
 }
-
 .playlist:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   transform: scale(1.02);
   cursor: pointer;
 }
-
 .playlist img {
   width: 64px;
   height: 64px;
   border-radius: 10px;
   object-fit: cover;
 }
+.playlist .info span { font-weight: 600; font-size: 20px; display: block; }
+.playlist .info small { font-weight: 400; font-size: 14px; opacity: 0.7; }
 
 .menu-btn {
   margin-left: auto;
@@ -90,32 +90,91 @@ body {
   padding: 6px;
   transition: 0.2s;
 }
-
 .menu-btn:hover { transform: scale(1.2); }
+/* =========================================================
+ 🎵 ПРАВАЯ КОЛОНКА (СХОЖІ ТРЕКИ)
+========================================================= */
+.sidebar-right {
+  width: 320px;
+  background: rgba(0, 0, 0, 1);
+  border-radius: 0 0 30px 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
 
+.sidebar-right h2 {
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #d6d6d6;
+}
+
+/* Оформление треков справа */
+.track {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: 0.2s;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.track:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.track .icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #d9d9d9;
+}
+
+.track .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.track .info span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.track .info small {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* ===== контекстное меню ===== */
 .playlist-menu {
   position: absolute;
   top: 50%;
   left: calc(100% + 20px);
   transform: translateY(-50%) scale(0.9);
-  background: rgba(20, 20, 20, 0.98);
+  background: rgba(20,20,20,0.98);
   border-radius: 10px;
   padding: 8px 0;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
   opacity: 0;
   pointer-events: none;
-  z-index: 10;
   transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
-
 .playlist-menu.active {
   opacity: 1;
   transform: translateY(-50%) scale(1);
   pointer-events: auto;
 }
-
 .playlist-menu button {
   background: none;
   border: none;
@@ -127,15 +186,14 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background 0.15s;
-  white-space: nowrap;
 }
-
 .playlist-menu button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
 }
 
-/* Центральная часть */
+/* =========================================================
+ 🎧 ЦЕНТРАЛЬНАЯ ЧАСТЬ (ПЛЕЕР)
+========================================================= */
 .player {
   flex: 1;
   display: flex;
@@ -143,6 +201,15 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #a000ff rgba(255,255,255,0.05);
+}
+.player::-webkit-scrollbar { width: 6px; }
+.player::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a000ff, #ff00cc);
+  border-radius: 10px;
 }
 
 .cover {
@@ -154,13 +221,11 @@ body {
   position: relative;
   margin-bottom: 20px;
 }
-
 .cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .cover-title {
   position: absolute;
   bottom: 0;
@@ -173,18 +238,13 @@ body {
   padding: 10px 0;
   border-radius: 0 0 16px 16px;
 }
+.seek-bar { width: 400px; margin: 20px 0; accent-color: #d40000; }
 
-.seek-bar {
-  width: 400px;
-  margin: 20px 0;
-  accent-color: #d40000;
-}
-
+/* Controls */
 .controls {
   display: flex;
   gap: 20px;
 }
-
 .controls button {
   width: 60px;
   height: 60px;
@@ -196,73 +256,30 @@ body {
   color: #000;
   transition: 0.2s;
 }
-
 .controls button:hover {
   transform: scale(1.1);
   background: #ddd;
 }
 
-/* Правая колонка */
-.sidebar-right {
-  width: 320px;
-  background: rgba(0,0,0,1);
-  border-radius: 0 0 30px 0;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  color: #fff;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-  z-index: 2;
-}
-
-.track {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.track:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.02);
-}
-
-.track .icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 10px;
-  object-fit: cover;
-  background: #d9d9d9;
-}
-
-/* 🎧 Ползунок громкости */
-/* 🔊 Горизонтальный слайдер громкости */
+/* Volume */
 .volume-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 16px;
 }
-
 .volume-icon {
   font-size: 24px;
   color: white;
   cursor: pointer;
   transition: transform 0.2s, color 0.3s;
 }
-
 .volume-icon:hover {
   transform: scale(1.15);
   color: #ff79ff;
 }
-
 .volume-slider {
-  -webkit-appearance: none;
-  appearance: none;
   width: 200px;
   height: 8px;
   background: linear-gradient(to right, #ff0077, #a000ff);
@@ -271,43 +288,9 @@ body {
   cursor: pointer;
 }
 
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  background: white;
-  border-radius: 50%;
-  border: 2px solid #a000ff;
-  cursor: grab;
-  transition: 0.2s;
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-.volume-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  background: white;
-  border-radius: 50%;
-  border: 2px solid #a000ff;
-  cursor: grab;
-  transition: 0.2s;
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-.volume-container.show .volume-slider {
-  opacity: 1;
-  transform: scaleY(1);
-}
-
-/* 🧰 Модалка */
+/* =========================================================
+ 🗑️ МОДАЛКА УДАЛЕНИЯ
+========================================================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -320,11 +303,7 @@ body {
   transition: opacity 0.3s ease;
   z-index: 1000;
 }
-
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
 
 .modal {
   background: #111;
@@ -333,9 +312,8 @@ body {
   text-align: center;
   max-width: 400px;
   width: 90%;
-  animation: modalScale 0.3s ease;
+  animation: modalScale 0.25s ease;
 }
-
 @keyframes modalScale {
   from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -347,131 +325,251 @@ body {
   gap: 15px;
   margin-top: 20px;
 }
-
-.modal-actions button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
 .confirm-delete {
   background: #e60000;
   color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
 }
-
 .cancel-delete {
   background: #555;
   color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
 }
 
-.modal-actions button:hover {
-  transform: scale(1.05);
-}
-.confirm-delete:hover {
-  background: #ff1a1a;
-}
-/* 🌟 Модалка создания плейлиста */
+/* =========================================================
+ 🧩 МОДАЛКА СОЗДАНИЯ ПЛЕЙЛИСТА
+========================================================= */
 .create-playlist-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0,0,0,0.75);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  z-index: 2000;
+  z-index: 1000;
 }
-
 .create-playlist-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
 
 .create-playlist-modal {
+  display: flex;
   background: #111;
+  border-radius: 12px;
+  overflow: hidden;
   width: 60%;
-  max-width: 800px;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  text-align: center;
-  animation: createModalShow 0.35s ease;
+  max-width: 900px;
+  animation: modalScale 0.3s ease;
+  box-shadow: 0 0 40px rgba(0,0,0,0.4);
 }
 
-@keyframes createModalShow {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+/* Левая часть */
+.create-left {
+  flex: 1;
+  background: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
 }
-
-.create-playlist-modal h2 {
+.cover-preview {
+  background: #6b6b6b;
+  border-radius: 15px;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cover-title-editable {
+  color: #fff;
+  font-weight: 700;
   font-size: 28px;
+  text-align: center;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  padding-bottom: 8px;
+  outline: none;
+}
+
+/* ПРАВАЯ ЧАСТЬ */
+.create-right {
+  width: 45%;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  border-radius: 0 12px 12px 0;
+  max-height: 600px;
+}
+
+.create-right h3 {
+  font-size: 22px;
+  font-weight: 700;
   margin-bottom: 20px;
 }
 
-.playlist-name-input,
-.playlist-desc-input {
-  width: 100%;
-  background: #222;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 15px;
-  font-size: 16px;
-  outline: none;
-  resize: none;
-  transition: background 0.3s;
-}
-
-.playlist-name-input:focus,
-.playlist-desc-input:focus {
-  background: #333;
-}
-
-.playlist-desc-input {
-  min-height: 80px;
-}
-
-.create-playlist-modal .modal-actions {
+/* Рекомендованные треки */
+.recommended-tracks {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 15px;
-  margin-top: 15px;
+  padding-right: 8px;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #a000ff rgba(255,255,255,0.05);
+  min-height: 250px;
+  overflow-y: auto;
+}
+.recommended-tracks::-webkit-scrollbar { width: 6px; }
+.recommended-tracks::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a000ff, #ff00cc);
+  border-radius: 10px;
 }
 
+/* Один трек */
+.track-item {
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: background 0.25s, transform 0.25s;
+}
+.track-item:hover { background: #252525; transform: scale(1.02); }
+
+.track-item input[type="checkbox"] {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #999;
+  border-radius: 6px;
+  margin-right: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.track-item input[type="checkbox"]:checked {
+  background: linear-gradient(145deg, #a000ff, #ff00cc);
+  border-color: #a000ff;
+}
+.track-item input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  top: 0;
+  left: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+.rec-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 14px;
+  background: radial-gradient(circle at center, #3a3a3a 30%, #1e1e1e 100%);
+}
+.track-info span {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+.track-info small {
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+/* Кнопки */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: auto;
+}
+.confirm-create, .cancel-create {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+}
 .confirm-create {
-  background: #a000ff;
+  background: linear-gradient(135deg, #a000ff, #ff00cc);
   color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
+  font-weight: 600;
 }
-
 .confirm-create:hover {
-  background: #c000ff;
   transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.4);
 }
-
 .cancel-create {
-  background: #555;
+  background: #444;
   color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
+}
+.cancel-create:hover {
+  background: #666;
+  transform: scale(1.05);
+}
+/* ===== 🩹 FIX: отображение рекомендованных треков ===== */
+.recommended-tracks {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.cancel-create:hover {
-  background: #777;
-  transform: scale(1.05);
+.recommended-tracks .track-item {
+  opacity: 1 !important;
+  transform: none !important;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  transition: background 0.25s, transform 0.25s;
+}
+
+.recommended-tracks .track-item:hover {
+  background: #262626;
+  transform: scale(1.02);
+}
+
+.recommended-tracks .rec-thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.recommended-tracks .track-info span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.recommended-tracks .track-info small {
+  color: #bbb;
+  font-size: 13px;
 }
