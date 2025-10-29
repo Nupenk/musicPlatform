@@ -16,6 +16,9 @@
   const confirmCreateBtn = createOverlay.querySelector('.confirm-create');
   const cancelCreateBtn = createOverlay.querySelector('.cancel-create');
   const recommendedContainerSelector = '.recommended-tracks';
+  let similiarTracksList = [];
+  let currentSimilarIndex = -1;
+
 
   let audio = null;
   let trackUrl = '';
@@ -23,18 +26,68 @@
 
   /* ===== 🎶 Загрузка основного трека ===== */
   function fetchTrack() {
-    fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=1`)
+    fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=5`)
       .then(res => res.json())
       .then(data => {
         const track = data.results[0];
         if (!track) return;
         trackUrl = track.audio;
-        coverEl.src = track.album_image;
+        coverEl.src = track.image;
         trackNameEl.textContent = track.name;
       })
       .catch(err => console.error('Помилка завантаження треку:', err));
   }
   fetchTrack();
+
+  function similiarTracks() {
+    fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=10`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.querySelector('.sidebar-right .tracks');
+        container.innerHTML = '';
+
+        data.results.forEach(track => {
+          const trackHTML = `
+            <div class="track" 
+                data-audio="${track.audio}" 
+                data-name="${track.name}" 
+                data-artist="${track.artist_name}" 
+                data-image="${track.image}">
+              <img class="icon" src="${track.image || 'placeholder.jpg'}" alt="Track">
+              <div class="info">
+                <span>${track.name}</span>
+                <small>${track.artist_name}</small>
+              </div>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', trackHTML);
+        });
+
+        // Додаємо обробники кліку
+        container.querySelectorAll('.track').forEach(el => {
+          el.addEventListener('click', () => {
+            const audioSrc = el.dataset.audio;
+            const name = el.dataset.name;
+            const artist = el.dataset.artist;
+            const img = el.dataset.image;
+
+            // Оновлюємо плеєр
+            trackNameEl.textContent = name;
+            coverEl.src = img || 'placeholder.jpg';
+
+            if (audio) audio.pause();
+            audio = new Audio(audioSrc);
+            audio.volume = parseFloat(volumeSlider?.value || 1);
+            audio.play();
+            playBtn.textContent = '⏸';
+            attachAudioEvents();
+          });
+        });
+      })
+      .catch(err => console.error('Помилка завантаження схожих треків:', err));
+  }
+  similiarTracks();
+
 
   /* ===== ⏱ Seek bar ===== */
   function updateSeekBar() {
@@ -47,8 +100,22 @@
   function attachAudioEvents() {
     if (!audio) return;
     audio.ontimeupdate = updateSeekBar;
-    audio.onended = () => playBtn.textContent = '▶';
+    audio.onended = () => {
+      playBtn.textContent = '▶';
+
+      // Якщо є плейліст і треки в ньому
+      if (currentPlaylistTracks.length > 0) {
+        currentTrackIndex++;
+        if (currentTrackIndex < currentPlaylistTracks.length) {
+          playTrack(currentTrackIndex); // грає наступний трек
+        } else {
+          console.log('🎵 Плейліст завершено!');
+          currentTrackIndex = 0; // можеш прибрати, якщо не треба повтор
+        }
+      }
+    };
   }
+
 
   seekBar.addEventListener('input', () => {
     if (audio) audio.currentTime = seekBar.value;
@@ -204,6 +271,26 @@
 }
 
   /* ===== 🪄 Модалка создания плейлиста ===== */
+
+  const editable = document.querySelector('[contenteditable="true"]');
+  const maxLength =  10;
+
+  editable.addEventListener('input', () => {
+    if (editable.textContent.length > maxLength) {
+      editable.textContent = editable.textContent.slice(0, maxLength);
+      placeCaretAtEnd(editable); // щоб курсор залишався в кінці
+    }
+  });
+
+  function placeCaretAtEnd(el) {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
   if (createBtn) {
     createBtn.addEventListener('click', () => {
       populateRecommendedTracks(3);
@@ -214,7 +301,7 @@
 
   cancelCreateBtn.addEventListener('click', () => {
     createOverlay.classList.remove('active');
-    coverTitleEditable.textContent = 'Назва плейлісту';
+    coverTitleEditable.textContent = '';
   });
 
   createOverlay.addEventListener('click', (e) => {
