@@ -395,13 +395,41 @@ body {
   color: #fff;
   font-weight: 700;
   font-size: 28px;
-  text-align: center;
+  text-align: left;
   border-bottom: 2px solid rgba(255,255,255,0.2);
   padding-bottom: 8px;
   outline: none;
 }
 
+[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: #888;
+  pointer-events: none;
+  user-select: none;
+  font-style: italic;
+}
+
+
 /* ПРАВАЯ ЧАСТЬ */
+/* Скрол для правої колонки (схожі треки) */
+.sidebar-right .tracks {
+  flex: 1;                /* займає весь доступний простір правої колонки */
+  max-height: calc(100vh - 100px); /* висота з урахуванням заголовка та паддінгів */
+  overflow-y: auto;       /* вертикальний скрол при переповненні */
+  padding-right: 8px;     /* щоб скрол не перекривав контент */
+  scrollbar-width: thin;  /* тонкий скрол для Firefox */
+  scrollbar-color: #a000ff rgba(255,255,255,0.05);
+}
+
+.sidebar-right .tracks::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-right .tracks::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a000ff, #ff00cc);
+  border-radius: 10px;
+}
+
 .create-right {
   width: 45%;
   background: #000;
